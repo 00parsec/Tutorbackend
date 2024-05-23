@@ -1,8 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { sequelize } = require('./database');
-const routes = require('./routes');
+const { Sequelize } = require('sequelize');
 
 require('dotenv').config();
 
@@ -12,9 +11,22 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
+const sequelize = new Sequelize({
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false // Esto puede ser necesario dependiendo de la configuración de tu base de datos
+    }
+  }
+});
 
-app.use('/api', routes);
-
+// Aquí debes definir tus modelos y asociaciones usando sequelize.define()
 
 sequelize.sync().then(() => {
   console.log('Database synced');
@@ -26,5 +38,3 @@ sequelize.sync().then(() => {
 });
 
 module.exports = app;
-
-
