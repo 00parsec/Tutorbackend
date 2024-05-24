@@ -9,6 +9,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
       require: true,
       rejectUnauthorized: false
     }
-};
+  } // Aquí falta cerrar la llave
+});
 
 module.exports = { sequelize };
