@@ -13,9 +13,10 @@ const port = process.env.PORT || 10000;
 app.use(bodyParser.json());
 app.use(cors());
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  port: process.env.PORT,
+
+const sequelize = new Sequelize('postgres_s', 'postgres_s', '1MAiNRd8qn3SPLcZGdiZHcbGHG21K6Xe', {
+  host: 'oregon-postgres.render.com',
+  port: 5432,
   dialect: 'postgres',
   dialectOptions: {
     ssl: {
@@ -24,6 +25,7 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, proces
     }
   }
 });
+
 
 app.use('/', routes);
 
