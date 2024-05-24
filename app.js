@@ -12,6 +12,44 @@ const port = process.env.PORT || 10000;
 
 app.use(bodyParser.json());
 app.use(cors());
+
+// Configuración de Sequelize sin SSL/TLS
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: false // Deshabilitar SSL/TLS
+  }
+});
+
+app.use('/', routes);
+
+sequelize.sync().then(() => {
+  console.log('Database synced');
+  app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running on port ${port}`);
+  });
+}).catch((error) => {
+  console.error('Error syncing database:', error);
+});
+
+module.exports = app;
+
+/*
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const { Sequelize } = require('sequelize');
+const routes = require('./routes');
+
+require('dotenv').config();
+
+const app = express();
+const port = process.env.PORT || 10000;
+
+app.use(bodyParser.json());
+app.use(cors());
 app.use('/', routes);
 
 const sequelize = new Sequelize({
@@ -40,6 +78,7 @@ sequelize.authenticate()
 
 module.exports = app;
 
+*/
 
 /*
 const express = require('express');
