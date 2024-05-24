@@ -89,7 +89,7 @@ sequelize.sync().then(() => {
 
 module.exports = app;
 
-*/
+
 
 /*
 --1
