@@ -14,14 +14,15 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/', routes);
 
-// Configuración básica de Sequelize
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize({
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   dialect: 'postgres',
   dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: true
-    }
+    ssl: true // Habilitar SSL
   }
 });
 
