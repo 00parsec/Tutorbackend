@@ -13,13 +13,15 @@ const port = process.env.PORT || 10000;
 app.use(bodyParser.json());
 app.use(cors());
 
-// Configuración de Sequelize sin SSL/TLS
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
+  port: process.env.PORT,
   dialect: 'postgres',
   dialectOptions: {
-    ssl: false // Deshabilitar SSL/TLS
+    ssl: {
+      require: true, // Requerir SSL/TLS
+      rejectUnauthorized: false // No rechazar conexiones no autorizadas (puedes ajustar esto según tu configuración de certificados)
+    }
   }
 });
 
