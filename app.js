@@ -1,4 +1,3 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -13,21 +12,32 @@ const port = process.env.PORT || 10000;
 app.use(bodyParser.json());
 app.use(cors());
 
-
-const sequelize = new Sequelize('postgres_s', 'postgres_s', '1MAiNRd8qn3SPLcZGdiZHcbGHG21K6Xe', {
-  host: 'oregon-postgres.render.com',
-  port: 5432,
+// Configuración de Sequelize
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
   dialect: 'postgres',
   dialectOptions: {
-    ssl: {
-      require: true, // Requerir SSL/TLS
-      rejectUnauthorized: false // No rechazar conexiones no autorizadas (puedes ajustar esto según tu configuración de certificados)
-    }
+    ssl: false // Deshabilitar SSL/TLS
   }
 });
 
-
 app.use('/', routes);
+
+// Manejo de errores 500
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Internal Server Error' });
+
+  // Consulta a la base de datos para obtener los datos en bruto
+  sequelize.query('SELECT * FROM tu_tabla')
+    .then(data => {
+      console.log('Datos en bruto:', data);
+    })
+    .catch(error => {
+      console.error('Error al obtener datos en bruto:', error);
+    });
+});
 
 sequelize.sync().then(() => {
   console.log('Database synced');
@@ -39,6 +49,7 @@ sequelize.sync().then(() => {
 });
 
 module.exports = app;
+
 
 /*
 const express = require('express');
