@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const sequelize = require('./database'); // Importa sequelize desde database.js
+const sequelize = require('./database'); // Verifica que la importación sea correcta
 const routes = require('./routes');
 
 require('dotenv').config();
@@ -11,7 +11,7 @@ const port = process.env.PORT || 10000;
 
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/', routes);
+app.use('/api', routes);
 
 // Comprobación de la conexión a la base de datos
 sequelize.authenticate()
@@ -26,6 +26,7 @@ sequelize.authenticate()
   });
 
 module.exports = app;
+
 
 
 
