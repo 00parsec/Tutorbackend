@@ -1,60 +1,6 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const { Sequelize } = require('sequelize');
-const routes = require('./routes');
-
-require('dotenv').config();
-
-const app = express();
-const port = process.env.PORT || 10000;
-
-app.use(bodyParser.json());
-app.use(cors());
-
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: process.env.DB_HOST,
-  port: process.env.PORT,
-  dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: false,
-      rejectUnauthorized: false
-    }
-  }
-});
 
 
-app.use('/', routes);
 
-// Manejo de errores 500
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Internal Server Error' });
-
-  // Consulta a la base de datos para obtener los datos en bruto
-  sequelize.query('SELECT * FROM tu_tabla')
-    .then(data => {
-      console.log('Datos en bruto:', data);
-    })
-    .catch(error => {
-      console.error('Error al obtener datos en bruto:', error);
-    });
-});
-
-sequelize.sync().then(() => {
-  console.log('Database synced');
-  app.listen(port, '0.0.0.0', () => {
-    console.log(`Server running on port ${port}`);
-  });
-}).catch((error) => {
-  console.error('Error syncing database:', error);
-});
-
-module.exports = app;
-
-
-/*
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -96,7 +42,7 @@ sequelize.authenticate()
 
 module.exports = app;
 
-*/
+
 
 /*
 const express = require('express');
