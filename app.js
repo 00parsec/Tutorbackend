@@ -12,15 +12,18 @@ const port = process.env.PORT || 10000;
 app.use(bodyParser.json());
 app.use(cors());
 
-// Configuración de Sequelize
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
+  port: process.env.PORT,
   dialect: 'postgres',
   dialectOptions: {
-    ssl: false // Deshabilitar SSL/TLS
+    ssl: {
+      require: false,
+      rejectUnauthorized: false
+    }
   }
 });
+
 
 app.use('/', routes);
 
