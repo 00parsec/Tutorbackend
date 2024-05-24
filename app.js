@@ -29,7 +29,7 @@ const sequelize = new Sequelize({
 });
 
 // Uso de las rutas definidas
-app.use('/', routes);
+app.use('/api', routes);
 
 sequelize.sync().then(() => {
   console.log('Database synced');
