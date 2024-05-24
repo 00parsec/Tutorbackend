@@ -1,18 +1,18 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { Sequelize } = require('sequelize');
-const routes = require('./routes'); // Asegúrate de importar las rutas
+const routes = require('./routes');
 
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+const port = process.env.PORT || 10000;  // Usa la variable de entorno PORT
 
 app.use(bodyParser.json());
 app.use(cors());
 
+// Configuración de Sequelize
 const sequelize = new Sequelize({
   database: process.env.DB_NAME,
   username: process.env.DB_USER,
@@ -23,18 +23,18 @@ const sequelize = new Sequelize({
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false,
-    },
-  },
+      rejectUnauthorized: false
+    }
+  }
 });
 
-// Usar las rutas importadas
+// Uso de las rutas definidas
 app.use('/', routes);
 
 sequelize.sync().then(() => {
   console.log('Database synced');
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  app.listen(port, '0.0.0.0', () => {  // Escuchar en todas las interfaces
+    console.log(`Server running on port ${port}`);
   });
 }).catch((error) => {
   console.error('Error syncing database:', error);
