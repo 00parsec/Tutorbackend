@@ -1,6 +1,53 @@
 
 const User = require('../models/Users'); 
 const bcrypt = require('bcryptjs');
+
+const register = async (req, res) => {
+  try {
+    const { username, password, email, firstName, lastName, phoneNumber, role } = req.body;
+    const existingUser = await User.findOne({ where: { username } });
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({
+      username,
+      password: hashedPassword,
+      email,
+      firstName,
+      lastName,
+      phoneNumber,
+      role
+    });
+
+    res.status(201).json({ message: 'User registered successfully', user: newUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error registering user' });
+  }
+};
+
+const login = async (req, res) => {
+  try {
+    // Aquí puedes implementar la lógica de inicio de sesión sin token, por ejemplo, validar las credenciales y devolver un mensaje de éxito
+    res.status(200).json({ message: 'Login successful' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error logging in' });
+  }
+};
+
+module.exports = {
+  register,
+  login
+};
+
+
+/*
+const User = require('../models/Users'); 
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 
@@ -77,4 +124,6 @@ module.exports = {
   login,
   getProfile
 };
+
+*/
 
