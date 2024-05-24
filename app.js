@@ -12,6 +12,48 @@ const port = process.env.PORT || 10000;
 
 app.use(bodyParser.json());
 app.use(cors());
+app.use('/', routes);
+
+// Configuración básica de Sequelize
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'postgres',
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
+});
+
+// Comprobación de la conexión a la base de datos
+sequelize.authenticate()
+  .then(() => {
+    console.log('Connection to the database has been established successfully.');
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
+module.exports = app;
+
+
+/*
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const { Sequelize } = require('sequelize');
+const routes = require('./routes');
+
+require('dotenv').config();
+
+const app = express();
+const port = process.env.PORT || 10000;
+
+app.use(bodyParser.json());
+app.use(cors());
 
 const sequelize = new Sequelize({
   database: process.env.DB_NAME,
@@ -40,6 +82,9 @@ sequelize.sync().then(() => {
 });
 
 module.exports = app;
+
+
+*/
 
 
 /*
